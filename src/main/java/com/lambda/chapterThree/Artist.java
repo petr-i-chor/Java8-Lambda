@@ -10,9 +10,10 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class Artist {
+public class Artist {   //表演者
     private String name;
     private String city;
+    private String nationality;
 
     public boolean isFrom(String city){
         return this.city.equals(city);
