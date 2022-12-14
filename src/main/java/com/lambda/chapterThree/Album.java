@@ -13,11 +13,19 @@ import java.util.stream.Stream;
 @Data
 public class Album {    //专辑
 
+    String name;
+
+    Artist mainMusicians;
+
     List<Artist> musicians;
 
     List<Track> tracks;
 
     public Stream<Artist> getMusicians() {
         return musicians.stream();
+    }
+
+    public Artist getMainMusicians() {
+        return mainMusicians;
     }
 }
