@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -44,11 +45,12 @@ public class chapterThreeTest {
     }
 
     @Test
-    public void test2(List<Artist> artists) {
+    public void test2() {
         /**
          * 2. 迭代。修改如下代码，将外部迭代转换成内部迭代：
          *
          */
+        List<Artist> artists = new ArrayList<>();
         int totalMembers = 0;
         for (Artist artist : artists) {
             Stream<Artist> members = artist.getMembers();
@@ -61,9 +63,71 @@ public class chapterThreeTest {
     }
     /**
      * 3. 求值。根据 Stream 方法的签名，判断其是惰性求值还是及早求值。
-     * a. boolean anyMatch(Predicate<? super T> predicate);   -> 惰性
-     * b. Stream<T> limit(long maxSize);    -> 及早
+     * a. boolean anyMatch(Predicate<? super T> predicate);   -> 及早
+     * b. Stream<T> limit(long maxSize);    -> 惰性
+     *
+     * 解答：判断一个操作是惰性求值还是及早求值很简单:只需看它的返回值。如果返回值是 Stream, 那么是惰性求值; 如果返回值是另一个值或为空,那么就是及早求值
      */
 
+    @Test
+    public void test3(){
+        Arrays.asList(1, 2, 3).stream().anyMatch(v->{
+            System.out.println("及早求职");
+            return   v.equals("2");
+        });
 
+        Arrays.asList(1, 2, 3).stream().map(v->{
+            System.out.println("惰性求值");
+            return v;
+        }).limit(2);
+
+    }
+
+    /**
+     * 6. 计算一个字符串中小写字母的个数（提示：参阅 String 对象的 chars 方法）。
+     */
+    @Test
+    public void test6(){
+        String str = "afbcdEFG";
+        System.out.println(str.chars().filter(v -> (v >= 'a' && v <= 'z')).count());
+    }
+    /**
+     * 7.在一个字符串列表中，找出包含最多小写字母的字符串。对于空列表，返回 Optional <String> 对象。
+     */
+    @Test
+    public void test7(){
+        String s = Stream.of("abc", "abCdd").max(Comparator.comparing(v -> {
+            int time = 0;
+            char[] chars = v.toCharArray();
+            for (char aChar : chars) {
+                if (aChar >= 'a' && aChar <= 'z') {
+                    time++;
+                }
+            }
+            return time;
+        })).get();
+        System.out.println(s);
+    }
+
+    @Test
+    public void test8(){
+        String s = Stream.of("abc", "abCdd").max((o1, o2) -> {
+            int time = 0;
+            char[] chars = o1.toCharArray();
+            for (char aChar : chars) {
+                if (aChar >= 'a' && aChar <= 'z') {
+                    time++;
+                }
+            }
+            int time2 = 0;
+            char[] chars2 = o2.toCharArray();
+            for (char aChar : chars2) {
+                if (aChar >= 'a' && aChar <= 'z') {
+                    time2++;
+                }
+            }
+            return time>time2?1:time==time2?0:-1;
+        }).get();
+        System.out.println(s);
+    }
 }
